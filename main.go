@@ -18,7 +18,7 @@ func FetchIssuesByRepository(client *github.Client, owner string, repo string, o
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/metrics/{owner}/{repository}", GetMetrics).Methods("GET")
+	router.HandleFunc("/goplan/{owner}/{repository}", GetMetrics).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
 
