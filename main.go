@@ -20,7 +20,8 @@ func FetchIssuesByRepository(client *github.Client, owner string, repo string, o
 func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/goplan/{owner}/{repository}", GetMetrics).Methods("GET")
-	log.Fatal(http.ListenAndServe(os.Getenv("PORT"), router))
+	port := ":" + os.Getenv("PORT")
+	log.Fatal(http.ListenAndServe(port, router))
 }
 
 func authenticateOauth(token string) *github.Client {
