@@ -3,7 +3,7 @@ package dao
 import (
 	"log"
 
-	"github.com/ivansandrini/metrics/models"
+	"github.com/ivansandrini/goplan/models"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
