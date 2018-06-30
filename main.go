@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/google/go-github/github"
 	"github.com/gorilla/mux"
@@ -19,7 +20,7 @@ func FetchIssuesByRepository(client *github.Client, owner string, repo string, o
 func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/goplan/{owner}/{repository}", GetMetrics).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(os.Getenv("PORT"), router))
 }
 
 func authenticateOauth(token string) *github.Client {
