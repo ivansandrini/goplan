@@ -101,18 +101,18 @@ func TestGetProduct(t *testing.T) {
 	checkResponseCode(t, http.StatusOK, response.Code)
 }
 
-/*func TestUpdateProduct(t *testing.T) {
+func TestUpdateProduct(t *testing.T) {
 	clearTable()
-	addProducts(1)
+	addSprints(1)
 
-	req, _ := http.NewRequest("GET", "/product/1", nil)
+	req, _ := http.NewRequest("GET", "/sprint/1", nil)
 	response := executeRequest(req)
-	var originalProduct map[string]interface{}
-	json.Unmarshal(response.Body.Bytes(), &originalProduct)
+	var originalSprint map[string]interface{}
+	json.Unmarshal(response.Body.Bytes(), &originalSprint)
 
-	payload := []byte(`{"name":"test product - updated name","price":11.22}`)
+	payload := []byte(`{"name":"test sprint","start_date":"2018-01-01","end_date":"2018-02-01"}`)
 
-	req, _ = http.NewRequest("PUT", "/product/1", bytes.NewBuffer(payload))
+	req, _ = http.NewRequest("PUT", "/sprint/1", bytes.NewBuffer(payload))
 	response = executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
@@ -120,36 +120,42 @@ func TestGetProduct(t *testing.T) {
 	var m map[string]interface{}
 	json.Unmarshal(response.Body.Bytes(), &m)
 
-	if m["id"] != originalProduct["id"] {
-		t.Errorf("Expected the id to remain the same (%v). Got %v", originalProduct["id"], m["id"])
+	if m["id"] != originalSprint["id"] {
+		t.Errorf("Expected the id to remain the same (%v). Got %v", originalSprint["id"], m["id"])
 	}
 
-	if m["name"] == originalProduct["name"] {
-		t.Errorf("Expected the name to change from '%v' to '%v'. Got '%v'", originalProduct["name"], m["name"], m["name"])
+	if m["name"] == originalSprint["name"] {
+		t.Errorf("Expected the name to change from '%v' to '%v'. Got '%v'", originalSprint["name"], m["name"], m["name"])
 	}
 
-	if m["price"] == originalProduct["price"] {
-		t.Errorf("Expected the price to change from '%v' to '%v'. Got '%v'", originalProduct["price"], m["price"], m["price"])
+	if m["start_date"] == originalSprint["start_date"] {
+		t.Errorf("Expected the start_date to change from '%v' to '%v'. Got '%v'", originalSprint["start_date"], m["start_date"], m["start_date"])
+	}
+
+	if m["end_date"] == originalSprint["end_date"] {
+		t.Errorf("Expected the end_date to change from '%v' to '%v'. Got '%v'", originalSprint["end_date"], m["end_date"], m["end_date"])
 	}
 }
 
 func TestDeleteProduct(t *testing.T) {
 	clearTable()
-	addProducts(1)
+	addSprints(1)
 
-	req, _ := http.NewRequest("GET", "/product/1", nil)
+	req, _ := http.NewRequest("GET", "/sprint/1", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	req, _ = http.NewRequest("DELETE", "/product/1", nil)
+	req, _ = http.NewRequest("DELETE", "/sprint/1", nil)
 	response = executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	req, _ = http.NewRequest("GET", "/product/1", nil)
+	req, _ = http.NewRequest("GET", "/sprint/1", nil)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
-}*/
+
+	deleteTableExists()
+}
 
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
@@ -166,6 +172,12 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 
 func ensureTableExists() {
 	if _, err := a.DB.Exec(tableCreationQuery); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func deleteTableExists() {
+	if _, err := a.DB.Exec(tableDelectionQuery); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -197,3 +209,5 @@ const tableCreationQuery = `CREATE TABLE public.sprints (
 WITH (
 	OIDS=FALSE
 ) ;`
+
+const tableDelectionQuery = `DROP TABLE public.sprints;`
